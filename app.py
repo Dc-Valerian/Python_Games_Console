@@ -2,8 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for
 import qrcode
 from io import BytesIO
 import base64
+import random
 
 app = Flask(__name__)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+else:
+
+    application = app
 
 # Initialize RPS game stats
 rps_stats = {
@@ -13,27 +20,26 @@ rps_stats = {
     'ties': 0
 }
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    if request.method == 'POST':
+        if 'restart' in request.form:
+            reset_rps_stats()
+            return redirect(url_for('home'))
+        
+        user_choice = request.form['choice']
+        computer_choice = get_computer_choice()
+        result = determine_rps_winner(user_choice, computer_choice)
+        
+        update_rps_stats(result)
+        
+        return render_template('index.html', 
+                           user_choice=user_choice,
+                           computer_choice=computer_choice,
+                           result=result,
+                           stats=rps_stats)
+    
     return render_template('index.html', stats=rps_stats)
-
-@app.route('/play-rps', methods=['POST'])
-def play_rps():
-    if 'restart' in request.form:
-        reset_rps_stats()
-        return redirect(url_for('home'))
-    
-    user_choice = request.form['choice']
-    computer_choice = get_computer_choice()
-    result = determine_rps_winner(user_choice, computer_choice)
-    
-    update_rps_stats(result)
-    
-    return render_template('index.html', 
-                        user_choice=user_choice,
-                        computer_choice=computer_choice,
-                        result=result,
-                        stats=rps_stats)
 
 @app.route('/dice', methods=['GET', 'POST'])
 def dice_game():
@@ -41,7 +47,6 @@ def dice_game():
         if 'restart' in request.form:
             return redirect(url_for('dice_game'))
         
-        import random
         dice_count = int(request.form.get('dice_count', 1))
         sides = int(request.form.get('sides', 6))
         
@@ -73,16 +78,13 @@ def qr_generator():
             
             img = qr.make_image(fill_color="black", back_color="white")
             
-            # Save the image to a bytes buffer
             buffer = BytesIO()
             img.save(buffer, format="PNG")
             qr_code = base64.b64encode(buffer.getvalue()).decode()
     
     return render_template('qr_generator.html', qr_code=qr_code)
 
-# Helper functions for RPS
 def get_computer_choice():
-    import random
     return random.choice(['rock', 'paper', 'scissors'])
 
 def determine_rps_winner(user, computer):
