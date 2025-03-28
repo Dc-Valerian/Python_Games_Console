@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+        }
+        .qr-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .qr-form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .qr-result {
+            margin-top: 30px;
+            padding: 20px;
+        }
+        .qr-image {
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .navigation {
+            margin-top: 30px;
+        }
+        .nav-link {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <h1>QR Code Generator</h1>
+        
+        <form method="POST" class="qr-form">
+            <div class="form-group">
+                <label for="qr-data">Enter text or URL to encode:</label>
+                <input type="text" id="qr-data" name="qr-data" placeholder="https://example.com" required>
+            </div>
+            <button type="submit">Generate QR Code</button>
+        </form>
+        
+        {% if qr_code %}
+        <div class="qr-result">
+            <h3>Your QR Code:</h3>
+            <div class="qr-image">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+            </div>
+            <p>Right-click the image to save it</p>
+        </div>
+        {% endif %}
+        
+        <div class="navigation">
+            <a href="/" class="nav-link">Play Rock Paper Scissors</a> | 
+            <a href="/dice" class="nav-link">Play Dice Game</a>
+        </div>
+    </div>
+</body>
+</html>

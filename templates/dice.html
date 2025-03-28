@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Rolling Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .control-group {
+            margin: 15px 0;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        select, input {
+            padding: 8px;
+            font-size: 16px;
+            width: 80px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .roll-btn {
+            background-color: #4CAF50;
+        }
+        .roll-btn:hover {
+            background-color: #45a049;
+        }
+        .reset-btn {
+            background-color: #f44336;
+        }
+        .reset-btn:hover {
+            background-color: #d32f2f;
+        }
+        .dice-results {
+            margin-top: 30px;
+        }
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .die {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+        .navigation {
+            margin-top: 30px;
+        }
+        .nav-link {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Dice Rolling Game</h1>
+        
+        <form method="POST" action="/dice">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="dice_count">Number of Dice:</label>
+                    <select id="dice_count" name="dice_count">
+                        <option value="1" {% if dice_count|default(1) == 1 %}selected{% endif %}>1</option>
+                        <option value="2" {% if dice_count|default(1) == 2 %}selected{% endif %}>2</option>
+                        <option value="3" {% if dice_count|default(1) == 3 %}selected{% endif %}>3</option>
+                        <option value="4" {% if dice_count|default(1) == 4 %}selected{% endif %}>4</option>
+                        <option value="5" {% if dice_count|default(1) == 5 %}selected{% endif %}>5</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="sides">Sides per Die:</label>
+                    <select id="sides" name="sides">
+                        <option value="4" {% if sides|default(6) == 4 %}selected{% endif %}>4</option>
+                        <option value="6" {% if sides|default(6) == 6 %}selected{% endif %}>6</option>
+                        <option value="8" {% if sides|default(6) == 8 %}selected{% endif %}>8</option>
+                        <option value="10" {% if sides|default(6) == 10 %}selected{% endif %}>10</option>
+                        <option value="12" {% if sides|default(6) == 12 %}selected{% endif %}>12</option>
+                        <option value="20" {% if sides|default(6) == 20 %}selected{% endif %}>20</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="roll-btn">Roll Dice</button>
+                {% if rolls %}
+                <button type="submit" name="restart" value="true" class="reset-btn">Reset</button>
+                {% endif %}
+            </div>
+        </form>
+        
+        {% if rolls %}
+        <div class="dice-results">
+            <div class="dice-container">
+                {% for roll in rolls %}
+                <div class="die">{{ roll }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="total">Total: {{ total }}</div>
+        </div>
+        {% else %}
+        <p>Select your dice options and click "Roll Dice" to start!</p>
+        {% endif %}
+        
+        <div class="navigation">
+           
+        </div>
+          <div class="navigation">
+          <a href="/" class="nav-link">Play Rock Paper Scissors Instead</a> |    
+            <a href="/qr-generator" class="nav-link">Qr-generator</a> 
+        </div>
+    </div>
+</body>
+</html>
